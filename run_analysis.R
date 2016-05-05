@@ -202,10 +202,15 @@ subjectMeans <- meanStdTblDf %>%
 ## the means of all variables by subject
 tidyData <- bind_rows(activityMeans, subjectMeans)
 
+## write the tidyData out to a .txt file
+write.table(tidyData, "tidyData.txt", row.names = FALSE)
+
+## This meets item 5 of the R script requirements.
+
 ## write the tidyData out to a .csv file
 write.csv(tidyData, "tidyData.csv")
 
-## This meets item 5 of the R script requirements.
+
 
 
 

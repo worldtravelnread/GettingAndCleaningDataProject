@@ -111,83 +111,212 @@ $(document).ready(function () {
 </div>
 
 
-<div id="readme.md" class="section level1">
-<h1>README.md</h1>
+<div id="codebook.md" class="section level1">
+<h1>CodeBook.md</h1>
 <div id="getting-and-cleaning-data-week-4-project" class="section level2">
 <h2>Getting and Cleaning Data Week 4 Project</h2>
-<p>This file gives an overview of the steps performed to complete the assigned project.</p>
-<p>The script file, run_analysis.R, has detailed comments describing what the code does.</p>
-<p>The CodeBook.md file contains supplemental information to the original readme.txt, features_info.txt, and features.txt files on naming conventions and notes about the data set, including dimensions. It contains detailed descriptions, including the code, for how the data sets were prepared and transformed for the assignment.</p>
-<p>The files used in this project are listed below and are from</p>
-<p>Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ortiz. Human Activity Recognition on Smartphones using a Multiclass Hardware-Friendly Support Vector Machine. International Workshop of Ambient Assisted Living (IWAAL 2012). Vitoria-Gasteiz, Spain. Dec 2012</p>
+<p>This file explains the rationale and methodology for the names used in this project. It is to be used in conjunction with the original readme.txt, features_info.txt, and features.txt files.</p>
+<div id="naming-conventions" class="section level3">
+<h3>Naming Conventions</h3>
+<p>Even with abbreviations, the variable names in features.txt are long.<br />
+The explanations for the abbreviations in features_info.txt make sense, and the naming conventions result in variable names that are reasonably descriptive. Therefore, the following existing naming conventions have been retained because they improve readability for the user.</p>
 <ul>
-<li>subject_test.txt</li>
-<li>subject_train.txt</li>
-<li>features.txt</li>
-<li>X_test.txt.zip</li>
-<li>X_train.txt.zip</li>
-<li>activity_labels.txt</li>
-<li>y_test.txt</li>
-<li>y_train.txt</li>
+<li>Mixed case: The use of both lower and upper case improves readability</li>
+<li>t prefix: Denotes time domain signals. From readme.txt, the units are seconds.</li>
+<li>f prefix: Denotes frequency domain signals. From readme.txt, the units are Hz.</li>
+<li>Acc: indicates data from the accelerometer</li>
+<li>Gyro: indicates data from the gyroscope</li>
+<li>Mag: indicates magnitude of the signals</li>
+<li>X, Y, Z: denote the specific axial dimension(s) measured</li>
+<li>-: use of the dash improves readability</li>
+<li>(): use of the parentheses improves readability</li>
+<li>,: use of the comma improves readability</li>
 </ul>
-<p>Details on the study are in the readme.txt file.</p>
-<p>A summary of the data files is as follows:</p>
-<p>The experiments were conducted with 30 participants who performed 6 activities while wearing a smartphone on the waist. The participant data was randomly partitioned into two sets, where 70% (21 of 30) of the participants were selected for generating the training data, 30% (9 of 30) for the test data.</p>
+</div>
+<div id="subject-data-sets" class="section level3">
+<h3>Subject Data Sets</h3>
+<p>Both subject_test.txt and subject_train.txt were loaded into R and then loaded as table data frames for manipulation with dplyr.</p>
+<pre class="{r}"><code>subjectTest &lt;- read.table(&quot;subject_test.txt&quot;)
+uniqSubjectTest &lt;- unique(subjectTest)</code></pre>
+<p>This results in a data frame with 2,947 observations and 1 variable. There were 9 unique participants in test.</p>
+<pre class="{r}"><code>subjectTrain &lt;- read.table(&quot;subject_train.txt&quot;)
+uniqSubjectTrain &lt;- unique(subjectTrain)</code></pre>
+<p>This results in a data frame with 7,352 observations and 1 variable. There were 21 unique participants in train.</p>
+<pre class="{r}"><code>subjectTestTblDf &lt;- tbl_df(subjectTest)
+subjectTrainTblDf &lt;- tbl_df(subjectTrain)</code></pre>
+<p>Both data frames were mutated to add a second column indicating from which set the data originated: Test or Train.</p>
+<pre class="{r]"><code>subjectTestTblDf &lt;- mutate(subjectTestTblDf, set = &quot;Test&quot;)
+subjectTrainTblDf &lt;- mutate(subjectTrainTblDf, set = &quot;Train&quot;)</code></pre>
+<p>Variable names were added to each data frame: subject and set.</p>
+<pre class="{r}"><code>names(subjectTestTblDf) &lt;- c(&quot;subject&quot;, &quot;set&quot;)
+names(subjectTrainTblDf) &lt;- c(&quot;subject&quot;, &quot;set&quot;)</code></pre>
+<p>This results in two variables in each data frame.</p>
 <ul>
-<li><p>subject_test.txt contains the IDs of each participant in the test set. There are 2,947 observations in the set, with 9 unique IDs.</p></li>
-<li><p>subject_train.txt contains the IDs of each participant in the training set. There are 7,352 observations in the set, with 21 unique IDs.</p></li>
+<li>This helps meet item 4 of the R script requirements to label the data set with descriptive variable names.</li>
 </ul>
-<p>Tri-axial measurements were taken from the phones’ accelerometers and gyroscopes, and 561 features were generated for each observation.</p>
+</div>
+<div id="features-data-set" class="section level3">
+<h3>Features Data Set</h3>
+<p>Upon examination of the features.txt file, the following duplications in variable names were observed:</p>
 <ul>
-<li><p>features.txt contains the index and names of each of the generated features. There are 561 observations in the set, and there were duplicates (see CodeBook.md for details).</p></li>
-<li><p>X_test.txt contains the feature data generated for each observation in the test set. There are 2,947 observations and 561 variables in the set.</p></li>
-<li><p>X_train.txt contains the feature data generated for each observation in the training set. There are 7,352 observations and 561 variables in the set.</p></li>
-<li><p>activity_labels.txt contains the activity IDs and names of the 6 activities performed during the experiment. There are 6 observations and 2 variables in the set.</p></li>
-<li><p>y_test.txt contains the activity IDs for each activity that was performed. There are 2,947 observations and 2 variables in the set.</p></li>
-<li><p>y_train.txt contains the activity IDs for each activity that was performed. There are 7,352 observations and 2 variables in the set.</p></li>
+<li><p>Variables 303 through 316 are repeated verbatim as + Variables 317 through 330 + Variables 331 through 344</p></li>
+<li><p>Variables 382 through 395 are repeated verbatim as + Variables 396 through 409 + Variables 410 through 423</p></li>
+<li><p>Variables 461 through 474 are repeated verbatim as + Variables 475 through 488 + Variables 489 through 502</p></li>
 </ul>
+<p>To make the variable names unique, the following steps were taken:</p>
 <ol style="list-style-type: decimal">
-<li><p>All the files were read into R and loaded as table data frames for manipulation with dplyr.</p></li>
-<li><p>Both of the subject- data sets were transformed by adding a column to indicate which set the participant belonged to: Test or Train. Then variable names were added to each data set.</p></li>
-<li><p>As mentioned earlier, features.txt had duplicative feature names. This data set was transformed by adding a column that pasted the ID with the feature name to create unique values. A character vector was created from the new column, and the variable names for the X- data sets were assigned using the vector.</p></li>
+<li>features.txt was loaded into R and then loaded as a table data frame for manipulation with dplyr.</li>
 </ol>
+<pre class="{r}"><code>features &lt;- read.table(&quot;features.txt&quot;)
+featuresTblDf &lt;- tbl_df(features)</code></pre>
+<p>This results in a data frame with 561 observations and 2 variables. The two variables are an index and the feature names.</p>
+<ol start="2" style="list-style-type: decimal">
+<li>A third column was added that pastes the index number and the feature name. [Note: My personal preference is to used mixed case in variable names to improve readability.]</li>
+</ol>
+<pre class="{r}"><code>featuresTblDf &lt;- mutate(featuresTblDf, indexFeatureName = paste(V1, V2, 
+                                                                 sep = &quot;-&quot;))</code></pre>
+<p>A character vector was created with the new feature names so that they can be assigned as names to the X_test.txt and X_train.txt data sets.</p>
+<pre class="{r}"><code>featuresVect &lt;- as.vector(featuresTblDf$indexFeatureName)</code></pre>
+<p>A vector was created with the features that either calculate a mean or a standard deviation. This will help with item 2 of the R script requirements.</p>
+<pre class="{r}"><code>meanStd &lt;- grep(&quot;mean|std&quot;, 
+              featuresTblDf$indexFeatureName,
+              value = TRUE)</code></pre>
+<p>This results in a vector of length 79.</p>
+</div>
+<div id="x--data-sets" class="section level3">
+<h3>X- Data Sets</h3>
+<p>Both X_test.txt and X_train.txt were loaded into R and then loaded as table data frames for manipulation with dplyr.</p>
+<pre class="{r}"><code>Xtest &lt;- read.table(&quot;X_test.txt&quot;)
+XtestTblDf &lt;- tbl_df(Xtest)</code></pre>
+<p>This results in a data frame with 2,947 observations and 561 variables.</p>
+<pre class="{r}"><code>Xtrain &lt;- read.table(&quot;X_train.txt&quot;)
+XtrainTblDf &lt;- tbl_df(Xtrain)</code></pre>
+<p>This results in a data frame with 7,352 observations and 561 variables.</p>
+<p>Next, the featuresVect vector is assigned as the variable names for both XtestTblDf and XtrainTblDf.</p>
+<pre class="{r}"><code>names(XtestTblDf) &lt;- featuresVect
+names(XtrainTblDf) &lt;- featuresVect</code></pre>
 <ul>
-<li>This meets item 4 of the R script requirements.</li>
+<li>This helps meet item 4 of the R script requirements to label the data set with descriptive variable names.</li>
 </ul>
-<ol start="4" style="list-style-type: decimal">
-<li><p>Another vector was created with features that calculated the mean or standard deviation. This will help with item 2 of the R script requirements. The resulting vector has a length of 79.</p></li>
-<li><p>The y- data sets were joined with the activity_labels data set so that each observation was labeled with the activity performed.</p></li>
-</ol>
+</div>
+<div id="activitiy-labels-data-set" class="section level3">
+<h3>Activitiy Labels Data Set</h3>
+<p>The activity_labels.txt data set was loaded into R then loaded as a table data frame for manipulation with dplyr.</p>
+<pre class="{r}"><code>activities &lt;- read.table(&quot;activity_labels.txt&quot;)
+activitiesTblDf &lt;- tbl_df(activities)</code></pre>
+<p>This results in a data frame with 6 observations and 2 variables. The variables are an index and the activity labels (i.e., names).</p>
+<p>Next, names were assigned to the variables.</p>
+<pre class="{r}"><code>names(activitiesTblDf) &lt;- c(&quot;activityID&quot;, &quot;activity&quot;)</code></pre>
+<p>A third column was added with the activity labels in lower case.</p>
+<pre class="{r}"><code>activitiesTblDf &lt;- mutate(activitiesTblDf, newActivityLabel = 
+                                  tolower(activitiesTblDf$activity))</code></pre>
+<p>The original activity column (with names in upper case) was removed from the data frame.</p>
+<pre class="{r}"><code>activitiesTblDf &lt;- select(activitiesTblDf, activityID, newActivityLabel)</code></pre>
+</div>
+<div id="y--data-sets" class="section level3">
+<h3>Y- Data Sets</h3>
+<p>Read the y_test.txt and y_train.txt data sets into R and load as table data frames for manipulation in dplyr.</p>
+<pre class="{r}"><code>ytest &lt;- read.table(&quot;y_test.txt&quot;)
+ytestTblDf &lt;- tbl_df(ytest)</code></pre>
+<p>This results in a data frame with 2,947 observations and 1 variable. The variable is the activity ID performed by the participant.</p>
+<pre class="{r}"><code>ytrain &lt;- read.table(&quot;y_train.txt&quot;)
+ytrainTblDf &lt;- tbl_df(ytrain)</code></pre>
+<p>This results in a data frame with 7,352 observations and 1 variable. The variable is the activity ID performed by the participant.</p>
+<p>The name “activityID” is added to each data frame. [Note: My personal preference is to used mixed case in variable names to improve readability.]</p>
+<pre class="{r}"><code>names(ytestTblDf) &lt;- c(&quot;activityID&quot;)
+names(ytrainTblDf) &lt;- c(&quot;activityID&quot;)</code></pre>
+</div>
+<div id="combining-the-data-sets" class="section level3">
+<h3>Combining the Data Sets</h3>
+<p>All the individual data sets have been loaded in R and loaded as table data frames. This section describes how all the sets were combined into one.</p>
+<div id="y--data-frames-and-activity-data-frame" class="section level4">
+<h4>Y- Data Frames and Activity Data Frame</h4>
+<p>The activity labels (i.e., names) were added to the y- data frames.</p>
+<pre class="{r}"><code>ytestTblDf &lt;- join(ytestTblDf, activitiesTblDf, by = &quot;activityID&quot;)
+ytrainTblDf &lt;- join(ytrainTblDf, activitiesTblDf, by = &quot;activityID&quot;)</code></pre>
+<p>ytestTblDf is a data frame with 2,947 observations and 2 variables.</p>
+<p>ytrainTblDf is a data frame with 7,352 observations and 2 variables.</p>
 <ul>
-<li>This meets item 3 of the R script requirements.</li>
+<li>This meets item 3 in the R script requirements to use descriptive activity names to name the activities in the data set.</li>
 </ul>
-<ol start="6" style="list-style-type: decimal">
-<li><p>The subject- and y- data frames were combined into new data sets.</p></li>
-<li><p>The X- data frames were added to the newly combined sets.</p></li>
-<li><p>The test- and train- data frames were combined into one consolidated data set with 10,299 observations and 565 variables.</p></li>
-</ol>
+<p>The merge function is not used because the order of the observations (i.e., rows) is not preserved.</p>
+</div>
+<div id="subject--data-frames-and-y--data-frames" class="section level4">
+<h4>Subject- Data Frames and Y- Data Frames</h4>
+<p>The subject test and y- test data frames are combined.</p>
+<pre class="{r}"><code>subjectYtestTblDf &lt;- bind_cols(subjectTestTblDf, ytestTblDf)</code></pre>
+<p>This results in a data frame with 2,947 observations and 4 variables.</p>
+<p>The subject train and y- train data frames are combined.</p>
+<pre class="{r}"><code>subjectYtrainTblDf &lt;- bind_cols(subjectTrainTblDf, ytrainTblDf)</code></pre>
+<p>This results in a data frame with 7,352 observations and 4 variables.</p>
+</div>
+<div id="add-the-x--data-frames" class="section level4">
+<h4>Add the X- Data Frames</h4>
+<p>The x- test data frame is added.</p>
+<pre class="{r}"><code>testAllTblDf &lt;- bind_cols(subjectYtestTblDf, XtestTblDf)</code></pre>
+<p>This results in a data frame with 2,947 observations and 565 variables.</p>
+<p>The x- train data frame is added.</p>
+<pre class="{r}"><code>trainAllTblDf &lt;- bind_cols(subjectYtrainTblDf, XtrainTblDf)</code></pre>
+<p>This results in a data frame with 7,352 observations and 565 variables.</p>
+</div>
+<div id="combine-the-test-and-train-data-frames" class="section level4">
+<h4>Combine the Test and Train Data Frames</h4>
+<p>The test and train data frames are combined.</p>
+<pre class="{r}"><code>consolidated &lt;- bind_rows(testAllTblDf, trainAllTblDf)</code></pre>
+<p>This results in a data frame with 10,299 observations and 565 variables.</p>
 <ul>
-<li>This meets item 1 of the R script requirements.</li>
+<li>This is the combined data set for item 1 of the R script requirements.</li>
+<li>The data set uses descriptive activity names, which meets item 2.</li>
+<li>The data set has descriptive variable names, which meets item 3.</li>
 </ul>
-<ol start="9" style="list-style-type: decimal">
-<li>The features with the mean and standard deviation measurements were extracted from the consolidated data frame, along with the subject and newActivityLevel data. The resulting data frame has 10,299 observations and 81 variables.</li>
-</ol>
+</div>
+</div>
+</div>
+<div id="extract-features-with-the-mean-or-standard-deviation" class="section level2">
+<h2>Extract Features with the Mean or Standard Deviation</h2>
+<p>The features with the Mean or Standard Deviation were extracted from the consolidated data frame.</p>
+<pre class="{r}"><code>meanStdTblDf &lt;- select(consolidated, 1:4, contains(&quot;mean&quot;), contains(&quot;std&quot;))</code></pre>
+<p>This results in a data frame with 10,299 observations and 90 variables.</p>
+<p>The first 4 variables are: subject, set, activityID, and newActivityLabel. This leaves 86 variables out of the original 561 features. When the meanStd vector was created earlier,</p>
+<pre class="{r}"><code>meanStd &lt;- grep(&quot;mean|std&quot;, 
+              featuresTblDf$indexFeatureName,
+              value = TRUE)</code></pre>
+<p>the resulting vector was length 79. Upon closer examination of meanStdTblDf, there are 7 variables that are not a feature that calculates the mean, but have a mean calculation included, such as 555-angle(tBodyAccMean,gravity) or 556-angle(tBodyAccJerkMean) or 555-angle(tBodyAccMean,gravity).</p>
+<p>The select statement was modified to exclude these types of features and exclude the set and activityID variables:</p>
+<pre class="{r}"><code>meanStdTblDf &lt;- select(consolidated, 1, 4, contains(&quot;mean&quot;), contains(&quot;std&quot;), -contains(&quot;mean)&quot;),
+                       -contains(&quot;mean,&quot;))</code></pre>
+<p>This results in a data frame with 10,299 observations and 81 variables.</p>
 <ul>
 <li>This meets item 2 of the R script requirements.</li>
 </ul>
-<ol start="10" style="list-style-type: decimal">
-<li><p>Convert the subject variable’s class from integer to character so it won’t get calculated as a mean.</p></li>
-<li><p>Create a data frame that calculates the means of all variables by activity. The resulting data frame has 6 observations and 81 variables.</p></li>
-<li><p>Create a data frame that calculates the means of all variables by subject. The resulting data frame has 30 observations and 81 variables.</p></li>
-<li><p>Combine the data frames with the means by activity and the means by subject into one tidy data set. The resulting data frame has 36 observations and 81 variables.</p></li>
-<li><p>Write the tidy data set to a .txt file.</p></li>
-</ol>
+</div>
+<div id="create-a-second-tidy-independent-data-set-with-the-average-of-each-variable-for-each-activity-and-each-subject" class="section level2">
+<h2>Create a Second, Tidy Independent Data Set with the Average of Each Variable for Each Activity and Each Subject</h2>
+<p>Convert the subject variable’s class from integer to character so it won’t get calculated as a mean:</p>
+<pre class="{r}"><code>meanStdTblDf &lt;- mutate(meanStdTblDf, subject = 
+                         as.character(subject))</code></pre>
+<p>Calculate the means of all the variables by activity:</p>
+<pre class="{r}"><code>activityMeans &lt;- meanStdTblDf %&gt;%
+  group_by(newActivityLabel) %&gt;%
+  summarize_each(funs(mean))</code></pre>
+<p>You will get warnings because the subject variable is now a character type so the mean cannot be calculated on the subjects, but that is okay.</p>
+<p>This results in a data frame with 6 observations and 81 variables.</p>
+<p>Calculate the means of all the variables by subject:</p>
+<pre class="{r}"><code>subjectMeans &lt;- meanStdTblDf %&gt;%
+  group_by(subject) %&gt;% 
+  summarize_each(funs(mean))</code></pre>
+<p>You will get warnings because means cannot be calculated on the newActivityLabel variable, but that is okay.</p>
+<p>This results in a data frame with 30 observations and 81 variables.</p>
+<p>Combine the means of all variables by activity and the means of all variables by subject:</p>
+<pre class="{r}"><code>tidyData &lt;- bind_rows(activityMeans, subjectMeans)</code></pre>
+<p>This results in a data frame with 36 observations and 81 variables.</p>
+<p>Write the tidyData into a .txt file:</p>
+<pre class="{r}"><code>write.table(tidyData, &quot;tidyData.txt&quot;, row.names = FALSE)</code></pre>
 <ul>
 <li>This meets item 5 of the R script requirements.</li>
 </ul>
-<ol start="15" style="list-style-type: decimal">
-<li>Write the tidy data set to a .csv file.</li>
-</ol>
+<p>Write the tidyData into a .csv file:</p>
+<pre class="{r}"><code>write.csv(tidyData, &quot;tidyData.csv&quot;)</code></pre>
 </div>
 </div>
 

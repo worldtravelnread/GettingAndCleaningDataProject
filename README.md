@@ -81,9 +81,13 @@ measurements were extracted from the consolidated data frame, along with the sub
 
 13. Combine the data frames with the means by activity and the means by subject into one tidy data set. The resulting data frame has 36 observations and 81 variables.
 
-14. Write the tidy data set to a .csv file.
+14. Write the tidy data set to a .txt file.
 
 * This meets item 5 of the R script requirements.
+
+15. Write the tidy data set to a .csv file.
+
+
 
 
 

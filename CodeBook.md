@@ -356,13 +356,21 @@ tidyData <- bind_rows(activityMeans, subjectMeans)
 
 This results in a data frame with 36 observations and 81 variables.
 
+Write the tidyData into a .txt file:
+
+```{r}
+write.table(tidyData, "tidyData.txt", row.names = FALSE)
+```
+
+* This meets item 5 of the R script requirements.
+
 Write the tidyData into a .csv file:
 
 ```{r}
 write.csv(tidyData, "tidyData.csv")
 ```
 
-* This meets item 5 of the R script requirements.
+
 
 
 
