@@ -15,8 +15,8 @@ Davide Anguita, Alessandro Ghio, Luca Oneto, Xavier Parra and Jorge L. Reyes-Ort
 * subject_test.txt
 * subject_train.txt
 * features.txt
-* X_test.txt
-* X_train.txt
+* X_test.txt.zip
+* X_train.txt.zip
 * activity_labels.txt
 * y_test.txt
 * y_train.txt
