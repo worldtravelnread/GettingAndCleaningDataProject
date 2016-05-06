@@ -370,7 +370,26 @@ Write the tidyData into a .csv file:
 write.csv(tidyData, "tidyData.csv")
 ```
 
+### Update
 
+I misinterpreted the last item and created a data set with the average for each variable for each subject, and the average of each variable for each activity.
+
+This code creates a data set with the average for each variable for each activity and subject.
+
+```{r}
+allMeans <- meanStdTblDf %>%
+        group_by(newActivityLabel, subject) %>%
+        summarize_each(funs(mean))
+```
+This results in a data frame with 180 observations and 81 variables.
+
+Write the allMeans data frame to a .txt file
+write.table(allMeans, "allMeans.txt", row.names = FALSE)
+
+* This meets item 5 of the R script requirements.
+
+Write the tidyData out to a .csv file
+write.csv(allMeans, "allMeans.csv")
 
 
 

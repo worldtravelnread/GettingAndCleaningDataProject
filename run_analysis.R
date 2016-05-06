@@ -2,8 +2,8 @@
 
 ## Getting and Cleaning Data Week 4 Project
 
-library(plyr) 
-library(dplyr)
+## library(plyr) 
+## library(dplyr)
 
 ## read subject files into R
 subjectTest <- read.table("subject_test.txt")
@@ -56,6 +56,9 @@ meanStd <- grep("mean|std",
               value = TRUE)
 ## This returns a vector with 79 items.
 
+## unzip the X- files
+unzip("X_test.txt.zip")
+unzip("X_train.txt.zip")
 
 ## read the X test file into R
 Xtest <- read.table("X_test.txt")
@@ -205,15 +208,27 @@ tidyData <- bind_rows(activityMeans, subjectMeans)
 ## write the tidyData out to a .txt file
 write.table(tidyData, "tidyData.txt", row.names = FALSE)
 
-## This meets item 5 of the R script requirements.
-
 ## write the tidyData out to a .csv file
 write.csv(tidyData, "tidyData.csv")
 
+## I misinterpreted the last item and created a data set with the average for
+## each variable for each subject, and the average of each variable for each
+## activity.
 
+## this code creates a data set with the average for each variable for each 
+## activity and subject.
 
+allMeans <- meanStdTblDf %>%
+        group_by(newActivityLabel, subject) %>%
+        summarize_each(funs(mean))
 
+## write the allMeans data frame to a .txt file
+write.table(allMeans, "allMeans.txt", row.names = FALSE)
 
+## This meets item 5 of the R script requirements.
+
+## write the tidyData out to a .csv file
+write.csv(allMeans, "allMeans.csv")
 
 
 

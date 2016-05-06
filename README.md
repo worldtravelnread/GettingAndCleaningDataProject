@@ -83,11 +83,17 @@ measurements were extracted from the consolidated data frame, along with the sub
 
 14. Write the tidy data set to a .txt file.
 
-* This meets item 5 of the R script requirements.
-
 15. Write the tidy data set to a .csv file.
 
+16. Update: I misinterpreted the last item and created a data set with the average for each variable for each subject, and the average of each variable for each activity.
 
+I wrote that code creates a data set with the average for each variable for each activity and subject. The resulting data frame has 180 observations and 81 variables. 
+
+* This meets item 5 of the R script requirements.
+
+17. Write the updated data set to a .txt file.
+
+18. Write the updated data set to a .csv file.
 
 
 
